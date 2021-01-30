@@ -11,7 +11,7 @@ import React from 'react';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchString: ''};
+    this.state = {searchString: '', name: 'Lola Rosa', address: '123 Milton', phoneNumber: '123-456-7890'};
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
@@ -51,8 +51,10 @@ class App extends React.Component {
     var searchString = this.state.searchString.trim().toLowerCase();
     
     return (
-      <div className="App">
+      <div className="Search">
+        <div><b>Enter your address</b></div>
         <input type="text" value={this.state.searchString} onChange={this.handleChange} onKeyPress={this.handleKeyPress} placeholder="Search" />
+        <div>restaurant: {this.state.name}, address: {this.state.address}, phone: {this.state.phoneNumber}</div>
       </div>
     )
   }

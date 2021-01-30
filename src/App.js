@@ -16,15 +16,26 @@ class App extends React.Component {
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
+  async makeApiCall(url) {
+    // make call
+    // await
+    // return 
+  }
+
   handleKeyPress(event){
     if(event.key == 'Enter') {
       console.log("Enter was pressed");
 
       // fetch address information
+
+      // makeApiCall(url).then blah blah blah
       var addressData;
       fetch('https://maps.googleapis.com/maps/api/place/textsearch/json?query=' + this.state.searchString + '&key=AIzaSyCMBejhSp6tAA-1V5rAa36O7CJ5A1pHkfA')
         .then(response => response.json())
+        .then(data => addressData = data)
         .then(data => console.log(data));
+
+      
     }
     
   }

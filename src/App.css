@@ -2,10 +2,32 @@ body{
   background-color: #F8D6C5;
 }
 
+input[type="text"]
+{
+  font-family:'Courier New', Courier, monospace;
+}
+
+/* label, input {
+  display: block;
+}
+
+label {
+  margin-left: 20px;
+} */
+
 .App {
   text-align: center;
   vertical-align: middle;
   /* padding: 10px; */
+}
+
+.Title {
+  font-size: 35px;
+  line-height: 350px
+}
+
+.Results {
+  line-height: 350px ;
 }
 
 .Search {
@@ -13,7 +35,7 @@ body{
   text-align: center;
   vertical-align: middle;
   height: 100px;
-  line-height: 200px; 
+  line-height: 50px; 
 }
 
 .App-logo {

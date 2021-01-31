@@ -2,11 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 
-// export const sendRequest = ({props}) => {
-    
-//     return body;
-//   }
-
 var auth = 'AIzaSyCMBejhSp6tAA-1V5rAa36O7CJ5A1pHkfA';
 var body;
 var address = "3897 st urbain";
@@ -22,7 +17,7 @@ var data;
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchAddress: '', searchCuisine: '', searchRadius: '', name: 'Lola Rosa', address: '123 Milton', phoneNumber: '123-456-7890'};
+    this.state = {searchAddress: '', searchCuisine: '', searchRadius: '', name: '', address: '', openNow: false};
     this.handleCuisine = this.handleCuisine.bind(this);
     this.handleAddress = this.handleAddress.bind(this);
     this.handleRadius = this.handleRadius.bind(this);
@@ -51,21 +46,11 @@ class App extends React.Component {
 
       // fetch address information
 
-      // makeApiCall(url).then blah blah blah
-      // var addressData;
-      // fetch('https://maps.googleapis.com/maps/api/place/textsearch/json?query=' + this.state.searchAddress + '&key=AIzaSyCMBejhSp6tAA-1V5rAa36O7CJ5A1pHkfA')
-      //   .then(response => response.json())
-      //   .then(data => addressData = data)
-      //   .then(data => console.log(data));
-
       url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' + this.state.searchAddress + '&inputtype=textquery&key=' + auth;
       console.log(url)
       await this.makeApiCall(url)
       .then(response => this.getPlaceId(response))
-      // Promise.resolve();
-      // console.log(placeId);
-      // url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + this.placeId + '&fields=geometry&key=' + auth;
-
+    
       url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeId + '&fields=geometry&key=' + auth;
       console.log(url);
       await this.makeApiCall(url)
@@ -81,61 +66,30 @@ class App extends React.Component {
 
   getPlaceId(response) {
     placeId = response.candidates[0].place_id;
-    console.log(placeId);
-    // url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeId + '&fields=geometry&key=' + auth
-    // console.log(url);
   }
 
   getLocation(response) {
-    // console.log(response.result.geometry.location);
     location = response.result.geometry.location;
     latitude = location.lat;
     longitude = location.lng;
-    console.log(location);
   }
 
   getOptions(response) {
     console.log(response);
+    console.log(response.results);
+    var rand = Math.floor(Math.random() * response.results.length);
+    var data = response.results[rand]
+    var open = data.opening_hours.open_now ? "yes":"no"
+    this.setState({
+      name: data.name,
+      address: data.vicinity,
+      openNow: open
+    });
     // Need to get results from response and display them
     
   }
 
-  // getLocation(address) {
-  //   url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' + address + '&inputtype=textquery&key=' + auth;
-  //   const response = await fetch(url, {
-  //     method: 'GET',
-  //     mode: 'cors', // no-cors, *cors, same-origin
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //   });
-  //   // console.log(response.json());
-  //   return response.json();
-  // }      
-
-
-  // async getDeliveryLocation() {
-  //   let resp = getLocation("3897 st urbain");
-  //   // console.log()
-  //   placeId = resp.candidates[0].place_id;
-  //   url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeId + '&fields=geometry&key=' + auth;
-  //   const response = await fetch(url, {
-  //     method: 'GET',
-  //     mode: 'cors', // no-cors, *cors, same-origin
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //   });
-
-  //   let body = await response.json();
-  //   loc = body.result.geometry.location;
-  //   // console.log(loc);
-  // }
-
-  // getOptions() {
-  //   var endpoint = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' + '&inputtype=textquery&key=' + auth;
-    
-  // }
+  
 
   handleCuisine(event) {
     this.setState({
@@ -166,7 +120,7 @@ class App extends React.Component {
         <input type="text" value={this.state.searchCuisine} onChange={this.handleCuisine} onKeyPress={this.handleKeyPress} placeholder="Cuisine" />
         <input type="text" value={this.state.searchAddress} onChange={this.handleAddress} onKeyPress={this.handleKeyPress} placeholder="Address" />
         <input type="text" value={this.state.searchRadius} onChange={this.handleRadius} onKeyPress={this.handleKeyPress} placeholder="Radius" />
-        <div className="Results">restaurant: {this.state.name}, address: {this.state.address}, phone: {this.state.phoneNumber}</div>
+        <div className="Results"><b>restaurant: </b> {this.state.name} | <b>address: </b>{this.state.address} | <b>open now?:</b> {this.state.openNow}</div>
       </div>
     )
   }

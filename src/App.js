@@ -13,6 +13,8 @@ var address = "3897 st urbain";
 var endpoint;
 let request = new XMLHttpRequest();
 var location;
+var longitude;
+var latitude;
 var url;
 var placeId;
 var data;
@@ -43,7 +45,7 @@ class App extends React.Component {
     return response.json();
   }
 
-  handleKeyPress(event){
+  async handleKeyPress(event){
     if(event.key == 'Enter') {
       console.log("Enter was pressed");
 
@@ -56,8 +58,9 @@ class App extends React.Component {
       //   .then(data => addressData = data)
       //   .then(data => console.log(data));
 
-      url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' + address + '&inputtype=textquery&key=' + auth;
-      this.makeApiCall(url)
+      url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' + this.state.searchAddress + '&inputtype=textquery&key=' + auth;
+      console.log(url)
+      await this.makeApiCall(url)
       .then(response => this.getPlaceId(response))
       // Promise.resolve();
       // console.log(placeId);
@@ -65,24 +68,37 @@ class App extends React.Component {
 
       url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeId + '&fields=geometry&key=' + auth;
       console.log(url);
-      this.makeApiCall(url)
+      await this.makeApiCall(url)
       .then(response => this.getLocation(response));
+
+      url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + latitude + ',' + longitude + '&radius=' + this.state.searchRadius + '&type=restaurant&keyword=' + this.state.searchCuisine + '&key=' + auth
+      console.log("last url: " + url);
+      await this.makeApiCall(url)
+      .then(response => this.getOptions(response));
     }
     
   }
 
-  async getPlaceId(response) {
+  getPlaceId(response) {
     placeId = response.candidates[0].place_id;
     console.log(placeId);
     // url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeId + '&fields=geometry&key=' + auth
     // console.log(url);
   }
 
-  async getLocation(response) {
-    console.log(response);
-    // location = response.geometry.location;
+  getLocation(response) {
+    // console.log(response.result.geometry.location);
+    location = response.result.geometry.location;
+    latitude = location.lat;
+    longitude = location.lng;
     console.log(location);
-  }  
+  }
+
+  getOptions(response) {
+    console.log(response);
+    // Need to get results from response and display them
+    
+  }
 
   // getLocation(address) {
   //   url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' + address + '&inputtype=textquery&key=' + auth;

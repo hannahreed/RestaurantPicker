@@ -17,7 +17,7 @@ var data;
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchAddress: '', searchCuisine: '', searchRadius: '', name: '', address: '', openNow: false};
+    this.state = {searchAddress: '', searchCuisine: '', searchRadius: '', name: '', address: '', rating: ''};
     this.handleCuisine = this.handleCuisine.bind(this);
     this.handleAddress = this.handleAddress.bind(this);
     this.handleRadius = this.handleRadius.bind(this);
@@ -77,19 +77,21 @@ class App extends React.Component {
   getOptions(response) {
     console.log(response);
     console.log(response.results);
-    var rand = Math.floor(Math.random() * response.results.length);
-    var data = response.results[rand]
-    var open = data.opening_hours.open_now ? "yes":"no"
+    var options = response.results;
+
+    options = options.filter(restaurant => restaurant.business_status == 'OPERATIONAL');
+    options = options.filter(restaurant => restaurant.opening_hours.open_now == true);
+    options = options.filter(restaurant => restaurant.rating >= 3.5);
+
+
+    var rand = Math.floor(Math.random() * options.length);
+    var data = options[rand];
     this.setState({
       name: data.name,
       address: data.vicinity,
-      openNow: open
-    });
-    // Need to get results from response and display them
-    
+      rating: data.rating
+    });    
   }
-
-  
 
   handleCuisine(event) {
     this.setState({
@@ -115,12 +117,12 @@ class App extends React.Component {
 
     return (
       <div className="Search">
-        <div className="Title"><b>Restaurant Randomizer</b></div>
+        <div className="Title"><b>Resto-Roulette</b></div>
         <div>Insert your preferences below</div>
         <input type="text" value={this.state.searchCuisine} onChange={this.handleCuisine} onKeyPress={this.handleKeyPress} placeholder="Cuisine" />
         <input type="text" value={this.state.searchAddress} onChange={this.handleAddress} onKeyPress={this.handleKeyPress} placeholder="Address" />
-        <input type="text" value={this.state.searchRadius} onChange={this.handleRadius} onKeyPress={this.handleKeyPress} placeholder="Radius" />
-        <div className="Results"><b>restaurant: </b> {this.state.name} | <b>address: </b>{this.state.address} | <b>open now?:</b> {this.state.openNow}</div>
+        <input type="text" value={this.state.searchRadius} onChange={this.handleRadius} onKeyPress={this.handleKeyPress} placeholder="Max Distance (m)" />
+        <div className="Results"><b>restaurant: </b> {this.state.name} | <b>address: </b>{this.state.address} | <b>rating:</b> {this.state.rating}</div>
       </div>
     )
   }

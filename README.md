@@ -2,6 +2,8 @@ McHacks 2021 Project
 
 Uses Google Cloud's Places API to select a nearby restaurant for the user based on cuisine type, address, and distance.
 
+auth key for Google Cloud must be set in App.js
+
 Instructions for running locally are below, from React's starter code:
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

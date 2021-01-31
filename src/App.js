@@ -3,16 +3,11 @@ import './App.css';
 import React from 'react';
 
 var auth; // set this to your api key
-var body;
-var address = "3897 st urbain";
-var endpoint;
-let request = new XMLHttpRequest();
 var location;
 var longitude;
 var latitude;
 var url;
 var placeId;
-var data;
 
 class App extends React.Component {
   constructor(props) {

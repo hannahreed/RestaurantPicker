@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 
-var auth; // set this to your api key
+const {GOOGLE_CLOUD_KEY} = process.env;
 var location;
 var longitude;
 var latitude;
@@ -37,22 +37,18 @@ class App extends React.Component {
 
   async handleKeyPress(event){
     if(event.key == 'Enter') {
-      console.log("Enter was pressed");
 
       // fetch address information
 
-      url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' + this.state.searchAddress + '&inputtype=textquery&key=' + auth;
-      console.log(url)
+      url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' + this.state.searchAddress + '&inputtype=textquery&key=' + GOOGLE_CLOUD_KEY;
       await this.makeApiCall(url)
       .then(response => this.getPlaceId(response))
     
-      url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeId + '&fields=geometry&key=' + auth;
-      console.log(url);
+      url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeId + '&fields=geometry&key=' + GOOGLE_CLOUD_KEY;
       await this.makeApiCall(url)
       .then(response => this.getLocation(response));
 
-      url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + latitude + ',' + longitude + '&radius=' + this.state.searchRadius + '&type=restaurant&keyword=' + this.state.searchCuisine + '&key=' + auth
-      console.log("last url: " + url);
+      url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + latitude + ',' + longitude + '&radius=' + this.state.searchRadius + '&type=restaurant&keyword=' + this.state.searchCuisine + '&key=' + GOOGLE_CLOUD_KEY
       await this.makeApiCall(url)
       .then(response => this.getOptions(response));
     }
